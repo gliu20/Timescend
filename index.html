@@ -366,13 +366,21 @@ html, body {
 	var time = document.getElementById("time"),
 		date = document.getElementById("date"),
 		chimeEvery = document.getElementById("chimeEvery"),
-		nextChimeIn = document.getElementById("nextChimeIn");
-		reflection = document.getElementById("reflection");
+		nextChimeIn = document.getElementById("nextChimeIn"),
+		reflection = document.getElementById("reflection"),
+		offset = document.getElementById("nextChimeIn").value - document.getElementById("chimeEvery").value;
+	
+	// update offset when next chime changes or when chime every changes
+	function updateOffset () {
+		offset = document.getElementById("nextChimeIn").value - document.getElementById("chimeEvery").value;
+	}
+	chimeEvery.onchange = updateOffset;
+	nextChimeIn.onchange = updateOffset;
 	
 	// chime every __ mins
 	setInterval(function () {
-		if ((Math.round(Date.now() / 60000) + nextChimeIn.value)  % chimeEvery.value === 0) {
-			alert(new Date())
+		if ((Math.floor(Date.now() / 60000) + offset)  % chimeEvery.value === 0) {
+			console.log(new Date())
 		} 
 	}, 1000 * 60)
 	
