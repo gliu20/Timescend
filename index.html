@@ -8,6 +8,9 @@
 
 	<title>Timescend: Transcend over time -- Tools to help you make the most of your time</title>
 	
+	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+	
+	
 <style>
 * {
 	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
@@ -125,6 +128,37 @@ html, body {
 	.geo-caption {font-size:1rem;font-weight:400;letter-spacing: 0.03125rem;}
 	.geo-overline {font-size:1rem;font-weight:600;letter-spacing: 0.03125rem;}
 }
+
+/* gaze code */
+.row {display:flex;flex-direction:row;}
+.column {display:flex;flex-direction:column;}
+#sounds {
+	/*background:#33691e;
+	padding:6px;*/
+	margin:-8px;
+}
+
+.sounds-sound {
+	background:#fff;
+	color:#333;
+	display:inline-flex;
+	padding-right:20px;
+	border-radius:999px;
+	margin:8px 6px;
+	align-items:center;
+	box-shadow:rgba(0,0,0,0.2) 0px 1px 4px 0px;
+}
+.sounds-icon {
+	padding:12px;
+	color:#fff;
+	border:#fff 6px solid;  
+	border-radius:999px;
+	background:#29f;
+	margin-right:6px;
+}
+.sounds-sound--nature .sounds-icon {background:#4a5}
+.sounds-sound--calm .sounds-icon {background:#29f}
+.sounds-sound--music .sounds-icon {background:#f90}
 </style>
 </head>
 
@@ -156,12 +190,87 @@ html, body {
 			
 			
 		</section>
+		<section id="sounds" class="padding">
+			<h4 class="geo-no-margin geo-head-4" style="margin-top:30px;margin-bottom:15px;">Sounds</h4>
+			<button class="input geo-sub-1" onclick="createUIForEachSound(sounds);this.remove();" style="width:auto;">Show available sounds</button>
+		</section>
 		<section class="padding" style="flex:1;display:flex;flex-direction:column;min-height:300px;">
 			<h4 class="geo-no-margin geo-head-4" style="margin-top:30px;margin-bottom:15px;">Reflection</h4>
 			<textarea id="reflection" class="geo-body-1 input" style="line-height:1.15;flex:1;padding:15px;width:auto;"></textarea>
 		</section>
 	</main>
 	
+	
+
+
+	<script src="loop.js"></script>
+<script>
+const soundsUI = document.querySelector("#sounds");
+
+var sounds = [
+	{
+		name:"Rain",
+		icon:"cloud",
+		src:"https://about.google/assets/stories/rainforest/audio/sounds-of-the-rainforest/3.mp3?cache=5b1fa51",
+		category:"nature",
+		loopStart:0,
+		loopEnd:1
+	},
+	{
+		name:"Wildlife",
+		icon:"pets",
+		src:"https://about.google/assets/stories/rainforest/audio/sounds-of-the-rainforest/1.mp3?cache=1c07d95",
+		category:"nature",
+		loopStart:0,
+		loopEnd:1
+	},
+	{
+		name:"Calm",
+		icon:"landscape",
+		src:"https://www.gstatic.com/semantris/title_music.mp3",
+		category:"calm",
+		loopStart:0,
+		loopEnd:1
+	},
+	{
+		name:"Techno",
+		icon:"music_note",
+		src:"https://www.gstatic.com/semantris/arcade_music.mp3",
+		category:"music",
+		loopStart:0,
+		loopEnd:0.15
+	},
+	{
+		name:"Ominous",
+		icon:"music_note",
+		src:"https://www.google.com/logos/2013/drwho/bass-loop.ogg",
+		category:"music",
+		loopStart:0,
+		loopEnd:0.15
+	}
+];
+function createUIForSound (sound,i,theme) {
+	let div = document.createElement("div");
+	div.innerHTML = "<div class='sounds-icon material-icons'>" + sound.icon + "</div>" +
+					"<div class='column'>" +
+						"<div class='sounds-name'>" + sound.name + "</div>" +
+						"<input class='sounds-volume' type='range' min='0' max='1' step='0.01' oninput='sounds["+i+"].element.volume = this.value' value='0'>" +
+					"</div>";
+	div.className = "row sounds-sound" + " sounds-sound--" + theme;
+	
+	soundsUI.appendChild(div);
+}
+function createUIForEachSound (sounds) {
+	for (var i = 0; i < sounds.length; i++) {
+		sounds[i].element = loop(sounds[i].src,sounds[i].loopStart,sounds[i].loopEnd);
+		sounds[i].element.volume = 0;
+		createUIForSound(sounds[i],i,sounds[i].category);
+	}
+}
+
+
+
+</script>
 	<script>
 //(function () {
 
@@ -425,7 +534,10 @@ html, body {
 	setInterval(function () {
 		time.innerText = new Date().toLocaleTimeString();
 		date.innerText = new Date().toLocaleDateString();
-	},500)
+	},1000)
+	setInterval(function () {
+		date.innerText = new Date().toLocaleDateString();
+	},60000)
 	
 //})()
 	</script>
